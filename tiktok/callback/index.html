@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TikTok login</title>
+<meta name="robots" content="noindex">
+<style>
+  body{font:16px system-ui,sans-serif;background:#111;color:#eee;max-width:640px;margin:40px auto;padding:0 16px}
+  code{display:block;background:#222;padding:12px;border-radius:8px;word-break:break-all;margin:12px 0}
+  button{padding:10px 16px;border:0;border-radius:8px;background:#25f4ee;font-weight:600;cursor:pointer}
+</style>
+</head>
+<body>
+<h1>Almost done</h1>
+<p id="msg">Copy the address below and paste it into the script window.</p>
+<code id="url"></code>
+<button onclick="navigator.clipboard.writeText(location.href);this.textContent='Copied ✓'">Copy</button>
+<script>
+  document.getElementById('url').textContent = location.href;
+  if (!new URLSearchParams(location.search).get('code')) {
+    document.getElementById('msg').textContent =
+      'No login code in this address. Run "python ai_tiktok.py login" again.';
+  }
+</script>
+</body>
+</html>
