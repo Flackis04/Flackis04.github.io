@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StreamerClips: stream VODs into posted TikToks, automatically</title>
+<meta name="description" content="StreamerClips finds the moments viewers actually clipped, edits them into vertical Shorts and TikToks with captions and hooks, and sends them to TikTok. Built for GTA streamers and clippers.">
+<meta property="og:title" content="StreamerClips">
+<meta property="og:description" content="Stream VODs in, ready-to-post Shorts and TikToks out. Join the waitlist.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0f13; --panel: #171920; --panel2: #1f222b; --line: #2a2e3a;
+    --text: #eceef3; --muted: #9aa1b2; --accent: #ffe600; --ink: #15130a; --good: #3ddc84;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 Inter, system-ui, sans-serif; }
+  a { color: var(--accent); }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+  nav { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; }
+  .logo { font-weight: 800; font-size: 20px; letter-spacing: -.3px; color: var(--text); text-decoration: none; }
+  .logo span { background: var(--accent); color: var(--ink); padding: 0 7px; border-radius: 6px; margin-right: 4px; }
+  .btn { display: inline-block; background: var(--accent); color: var(--ink); font-weight: 700; text-decoration: none;
+         padding: 12px 22px; border-radius: 10px; border: 0; font: inherit; font-weight: 700; cursor: pointer; }
+  .btn:hover { filter: brightness(1.06); }
+  .btn.ghost { background: transparent; color: var(--text); border: 1px solid var(--line); }
+  header.hero { padding: 64px 0 56px; display: grid; grid-template-columns: 1.2fr 1fr; gap: 48px; align-items: center; }
+  h1 { font-size: clamp(34px, 5vw, 56px); line-height: 1.08; letter-spacing: -1.5px; margin: 0 0 18px; font-weight: 800; }
+  h1 em { font-style: normal; color: var(--accent); }
+  .lead { font-size: 19px; color: var(--muted); margin: 0 0 28px; max-width: 560px; }
+  .cta-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .phone { justify-self: center; width: 260px; aspect-ratio: 9/16; border-radius: 28px; background: #000;
+           border: 8px solid #23262f; position: relative; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,.5); }
+  .phone .cam { height: 36%; background: linear-gradient(135deg, #2b2f3a, #1a1c22); display: grid; place-items: center; color: #555b6b; font-size: 12px; }
+  .phone .game { height: 64%; background: linear-gradient(160deg, #3a2a4a, #1f3b4d 60%, #253a2a); position: relative; }
+  .phone .hook { position: absolute; top: calc(36% + 14px); left: 50%; transform: translateX(-50%); background: #fff; color: #000;
+                 font-weight: 800; font-size: 12px; padding: 6px 10px; border-radius: 8px; white-space: nowrap; text-transform: uppercase; }
+  .phone .cap { position: absolute; bottom: 22%; left: 0; right: 0; text-align: center; font-weight: 800; font-size: 22px;
+                text-transform: uppercase; color: #fff; -webkit-text-stroke: 1.5px #000; paint-order: stroke fill; }
+  .phone .cap b { color: var(--accent); }
+  section { padding: 56px 0; border-top: 1px solid var(--line); }
+  h2 { font-size: clamp(26px, 3.4vw, 36px); letter-spacing: -.8px; margin: 0 0 10px; }
+  .sub { color: var(--muted); margin: 0 0 32px; max-width: 640px; }
+  .grid { display: grid; gap: 18px; grid-template-columns: repeat(4, 1fr); }
+  .grid.three { grid-template-columns: repeat(3, 1fr); }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 20px; }
+  .card .n { font-weight: 800; color: var(--accent); font-size: 14px; letter-spacing: .08em; }
+  .card h3 { margin: 6px 0 6px; font-size: 18px; }
+  .card p { margin: 0; color: var(--muted); font-size: 15px; }
+  .case { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+  .case div { padding: 24px; border-right: 1px solid var(--line); }
+  .case div:last-child { border-right: 0; }
+  .case .big { font-size: 34px; font-weight: 800; letter-spacing: -1px; }
+  .case .lbl { color: var(--muted); font-size: 14px; }
+  .note { color: var(--muted); font-size: 14px; margin-top: 12px; }
+  form.wait { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 26px; max-width: 560px; }
+  label { display: block; font-size: 14px; color: var(--muted); margin: 14px 0 6px; }
+  input, select { width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--line); background: var(--panel2);
+                  color: var(--text); font: inherit; }
+  input:focus, select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  form .btn { width: 100%; margin-top: 20px; padding: 14px; font-size: 17px; }
+  .fine { font-size: 13px; color: var(--muted); margin-top: 12px; }
+  .ok { display: none; background: #12261a; border: 1px solid var(--good); color: #b8f5cf; padding: 14px 16px; border-radius: 10px; margin-top: 16px; }
+  details { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; margin-bottom: 10px; }
+  summary { cursor: pointer; font-weight: 700; }
+  details p { color: var(--muted); margin: 10px 0 0; }
+  footer { padding: 32px 0 48px; color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); }
+  @media (max-width: 860px) {
+    header.hero { grid-template-columns: 1fr; padding-top: 32px; }
+    .phone { width: 220px; }
+    .grid, .grid.three { grid-template-columns: 1fr 1fr; }
+    .case { grid-template-columns: 1fr; }
+    .case div { border-right: 0; border-bottom: 1px solid var(--line); }
+  }
+  @media (max-width: 520px) { .grid, .grid.three, .row { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <a class="logo" href="#"><span>Streamer</span>Clips</a>
+    <a class="btn ghost" href="#waitlist">Join the waitlist</a>
+  </nav>
+
+  <header class="hero">
+    <div>
+      <h1>8-hour streams in.<br><em>Posted TikToks</em> out.</h1>
+      <p class="lead">StreamerClips finds the moments viewers actually clipped, edits them into vertical Shorts and TikToks with captions and a hook, and sends them to your TikTok. Every day, on autopilot. Built for GTA streamers and clippers.</p>
+      <div class="cta-row">
+        <a class="btn" href="#waitlist">Get early access</a>
+        <a class="btn ghost" href="#how">How it works</a>
+      </div>
+    </div>
+    <div class="phone" aria-hidden="true">
+      <div class="cam">facecam</div>
+      <div class="game"></div>
+      <div class="hook">Watch the railroad crossing</div>
+      <div class="cap">he got <b>launched</b></div>
+    </div>
+  </header>
+
+  <section id="how">
+    <h2>How it works</h2>
+    <p class="sub">Paste a VOD link once, or let the autopilot check your streamers every morning.</p>
+    <div class="grid">
+      <div class="card"><div class="n">01 · FIND</div><h3>Real moments, not guesses</h3><p>Reads which moments viewers clipped on Twitch and how chat reacted, so it starts where the audience already reacted.</p></div>
+      <div class="card"><div class="n">02 · PICK</div><h3>AI that watches the video</h3><p>Claude reads the transcript and looks at the frames, scores each moment honestly and drops anything that needs context.</p></div>
+      <div class="card"><div class="n">03 · EDIT</div><h3>Built for retention</h3><p>Facecam on top, gameplay below, word-by-word captions, a hook card, dead air cut out, and a punch-in on the peak.</p></div>
+      <div class="card"><div class="n">04 · POST</div><h3>Straight to TikTok</h3><p>Every clip lands in your TikTok inbox, ready to post. A 15–40 s Shorts cut and a 60 s+ TikTok cut of each moment.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>From one real stream</h2>
+    <p class="sub">A single 7-hour GTA RP stream, run through StreamerClips:</p>
+    <div class="case">
+      <div><div class="big">218</div><div class="lbl">viewer-made clips read to find the hot moments</div></div>
+      <div><div class="big">10,910</div><div class="lbl">views on the moment it chose: a cop launched into a railroad crossing</div></div>
+      <div><div class="big">11 s</div><div class="lbl">final clip, scored 8/10, hook: "Watch the railroad crossing"</div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Everything a clipper does by hand</h2>
+    <p class="sub">Done for you, consistently, while you sleep.</p>
+    <div class="grid three">
+      <div class="card"><h3>Autopilot</h3><p>Checks your streamers' newest VODs daily, keeps only the game you care about, makes the best clips.</p></div>
+      <div class="card"><h3>Hooks that stop the scroll</h3><p>On-screen hooks written from proven formulas, plus two alternatives to A/B test.</p></div>
+      <div class="card"><h3>Cold opens</h3><p>When the payoff comes late, the clip opens on the peak first, then rewinds.</p></div>
+      <div class="card"><h3>Facecam detection</h3><p>Finds the streamer's cam automatically and stacks it above the gameplay.</p></div>
+      <div class="card"><h3>Titles and hashtags</h3><p>Every clip comes with a title, description and hashtags ready to paste.</p></div>
+      <div class="card"><h3>Quality bar</h3><p>Only clips that score high get made. No filler that drags your account down.</p></div>
+    </div>
+  </section>
+
+  <section id="waitlist">
+    <h2>Join the waitlist</h2>
+    <p class="sub">Early access opens in small batches. Waitlist members get in first, at launch pricing.</p>
+    <form class="wait" id="waitForm" novalidate>
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" required placeholder="you@example.com" autocomplete="email">
+      <div class="row">
+        <div>
+          <label for="role">I am a…</label>
+          <select id="role" name="role">
+            <option>Streamer (clipping my own streams)</option>
+            <option>Clipper (in a streamer's clipping program)</option>
+            <option>Agency / editor</option>
+            <option>Just curious</option>
+          </select>
+        </div>
+        <div>
+          <label for="price">I'd pay per month</label>
+          <select id="price" name="price">
+            <option>Nothing yet</option>
+            <option>$5–15</option>
+            <option>$15–30</option>
+            <option>$30–60</option>
+            <option>$60+</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn" type="submit" id="joinBtn">Join the waitlist</button>
+      <div class="ok" id="ok" role="status">You're on the list. We'll email you when your spot opens.</div>
+      <p class="fine">We only use your email to contact you about StreamerClips. Ask us any time to delete it.</p>
+    </form>
+  </section>
+
+  <section>
+    <h2>Questions</h2>
+    <details><summary>Is clipping other streamers allowed?</summary>
+      <p>Only with permission. StreamerClips is for streamers clipping their own streams, and for clippers working in a streamer's official clipping program. You're responsible for having the rights to the content you post.</p></details>
+    <details><summary>Does it post publicly on its own?</summary>
+      <p>Clips go to your TikTok inbox as drafts. You add a sound and tap Post, so nothing goes out without you seeing it first.</p></details>
+    <details><summary>Which platforms and games?</summary>
+      <p>Twitch VODs in, TikTok and YouTube Shorts formats out. It's tuned for GTA (including GTA 6), but works with any game.</p></details>
+    <details><summary>What will it cost?</summary>
+      <p>Pricing is announced at launch. Tell us what you'd pay in the form above. It helps us set it fairly.</p></details>
+  </section>
+</div>
+
+<footer>
+  <div class="wrap">© 2026 StreamerClips · <a href="mailto:bjornderouville@proton.me">Contact</a> · Not affiliated with Twitch, TikTok or Rockstar Games.</div>
+</footer>
+
+<script>
+  // Waitlist -> Google Form. Fill these in from your form (see README in this folder).
+  // While FORM.action is empty, the button opens a prefilled email instead.
+  const FORM = {
+    action: "",           // https://docs.google.com/forms/d/e/<FORM_ID>/formResponse
+    email: "",            // entry.123456789
+    role: "",             // entry.987654321
+    price: "",            // entry.555555555
+  };
+  const CONTACT = "bjornderouville@proton.me";
+
+  const f = document.getElementById("waitForm");
+  f.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = f.email.value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { f.email.focus(); f.email.setCustomValidity("Enter a valid email"); f.email.reportValidity(); return; }
+    f.email.setCustomValidity("");
+    if (!FORM.action) {
+      const body = encodeURIComponent(`Please add me to the StreamerClips waitlist.\n\nRole: ${f.role.value}\nWould pay: ${f.price.value}`);
+      location.href = `mailto:${CONTACT}?subject=${encodeURIComponent("StreamerClips waitlist")}&body=${body}`;
+      return;
+    }
+    const data = new FormData();
+    data.append(FORM.email, email);
+    if (FORM.role) data.append(FORM.role, f.role.value);
+    if (FORM.price) data.append(FORM.price, f.price.value);
+    const btn = document.getElementById("joinBtn");
+    btn.disabled = true; btn.textContent = "Joining…";
+    try {
+      await fetch(FORM.action, { method: "POST", mode: "no-cors", body: data });  // Google Forms accepts this
+      document.getElementById("ok").style.display = "block";
+      f.reset(); btn.textContent = "You're on the list ✓";
+    } catch (err) {
+      btn.disabled = false; btn.textContent = "Join the waitlist";
+      alert("Couldn't reach the signup form. Try again in a moment.");
+    }
+  });
+  f.email.addEventListener("input", () => f.email.setCustomValidity(""));
+</script>
+</body>
+</html>
