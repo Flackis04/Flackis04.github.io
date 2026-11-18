@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>StreamerClips: stream VODs into posted TikToks, automatically</title>
-<meta name="description" content="StreamerClips finds the moments viewers actually clipped, edits them into vertical Shorts and TikToks with captions and hooks, and sends them to TikTok. Built for GTA streamers and clippers.">
+<meta name="description" content="StreamerClips finds the moments viewers actually clipped, edits them into vertical Shorts and TikToks with captions and hooks. Built for GTA streamers and clippers. Start free.">
 <meta property="og:title" content="StreamerClips">
-<meta property="og:description" content="Stream VODs in, ready-to-post Shorts and TikToks out. Join the waitlist.">
+<meta property="og:description" content="Stream VODs in, ready-to-post Shorts and TikToks out. Start free with 3 hours of stream.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -83,15 +83,15 @@
 <div class="wrap">
   <nav>
     <a class="logo" href="#"><span>Streamer</span>Clips</a>
-    <a class="btn ghost" href="#waitlist">Join the waitlist</a>
+    <div style="display:flex;gap:8px"><a class="btn ghost" href="https://streamerclips.app/login">Log in</a><a class="btn" href="https://streamerclips.app/login#signup">Start free</a></div>
   </nav>
 
   <header class="hero">
     <div>
       <h1>8-hour streams in.<br><em>Posted TikToks</em> out.</h1>
-      <p class="lead">StreamerClips finds the moments viewers actually clipped, edits them into vertical Shorts and TikToks with captions and a hook, and sends them to your TikTok. Every day, on autopilot. Built for GTA streamers and clippers.</p>
+      <p class="lead">StreamerClips finds the moments viewers actually clipped, and edits them into vertical Shorts and TikToks with captions, a hook and a ready-to-paste caption. Built for GTA streamers and clippers.</p>
       <div class="cta-row">
-        <a class="btn" href="#waitlist">Get early access</a>
+        <a class="btn" href="https://streamerclips.app/login#signup">Start free: 3 hours on us</a>
         <a class="btn ghost" href="#how">How it works</a>
       </div>
     </div>
@@ -105,12 +105,12 @@
 
   <section id="how">
     <h2>How it works</h2>
-    <p class="sub">Paste a VOD link once, or let the autopilot check your streamers every morning.</p>
+    <p class="sub">Paste a VOD link, pick the part of the stream, and get clips back.</p>
     <div class="grid">
       <div class="card"><div class="n">01 · FIND</div><h3>Real moments, not guesses</h3><p>Reads which moments viewers clipped on Twitch and how chat reacted, so it starts where the audience already reacted.</p></div>
       <div class="card"><div class="n">02 · PICK</div><h3>AI that watches the video</h3><p>Claude reads the transcript and looks at the frames, scores each moment honestly and drops anything that needs context.</p></div>
       <div class="card"><div class="n">03 · EDIT</div><h3>Built for retention</h3><p>Facecam on top, gameplay below, word-by-word captions, a hook card, dead air cut out, and a punch-in on the peak.</p></div>
-      <div class="card"><div class="n">04 · POST</div><h3>Straight to TikTok</h3><p>Every clip lands in your TikTok inbox, ready to post. A 15–40 s Shorts cut and a 60 s+ TikTok cut of each moment.</p></div>
+      <div class="card"><div class="n">04 · POST</div><h3>Ready to post</h3><p>Download a 15–40 s Shorts cut and a 60 s+ TikTok cut of every moment, with title and hashtags to paste. Direct posting to TikTok is coming soon.</p></div>
     </div>
   </section>
 
@@ -128,7 +128,7 @@
     <h2>Everything a clipper does by hand</h2>
     <p class="sub">Done for you, consistently, while you sleep.</p>
     <div class="grid three">
-      <div class="card"><h3>Autopilot</h3><p>Checks your streamers' newest VODs daily, keeps only the game you care about, makes the best clips.</p></div>
+      <div class="card"><h3>Autopilot <small style="color:var(--accent);font-size:12px">COMING SOON</small></h3><p>Will check your streamers' newest VODs daily, keep only the game you care about, and make the best clips.</p></div>
       <div class="card"><h3>Hooks that stop the scroll</h3><p>On-screen hooks written from proven formulas, plus two alternatives to A/B test.</p></div>
       <div class="card"><h3>Cold opens</h3><p>When the payoff comes late, the clip opens on the peak first, then rewinds.</p></div>
       <div class="card"><h3>Facecam detection</h3><p>Finds the streamer's cam automatically and stacks it above the gameplay.</p></div>
@@ -137,43 +137,16 @@
     </div>
   </section>
 
-  <section id="waitlist">
-    <h2>Join the waitlist</h2>
-    <p class="sub">Early access opens in small batches. Waitlist members get in first, at launch pricing.</p>
-    <form class="wait" id="waitForm" novalidate>
-      <label for="email">Email</label>
-      <input id="email" name="email" type="email" required placeholder="you@example.com" autocomplete="email">
-      <div class="row">
-        <div>
-          <label for="role">I am a…</label>
-          <select id="role" name="role">
-            <option>Streamer (clipping my own streams)</option>
-            <option>Clipper (in a streamer's clipping program)</option>
-            <option>Agency / editor</option>
-            <option>Just curious</option>
-          </select>
-        </div>
-        <div>
-          <label for="price">I'd pay per month</label>
-          <select id="price" name="price">
-            <option>Nothing yet</option>
-            <option>$5–15</option>
-            <option>$15–30</option>
-            <option>$30–60</option>
-            <option>$60+</option>
-          </select>
-        </div>
-      </div>
-      <label for="plan">I'd rather</label>
-      <select id="plan" name="plan">
-        <option>Monthly plan with credits included</option>
-        <option>Pay as I go (buy credit packs)</option>
-        <option>Not sure yet</option>
-      </select>
-      <button class="btn" type="submit" id="joinBtn">Join the waitlist</button>
-      <div class="ok" id="ok" role="status">You're on the list. We'll email you when your spot opens.</div>
-      <p class="fine">We only use your email to contact you about StreamerClips. Ask us any time to delete it.</p>
-    </form>
+  <section id="start">
+    <h2>Start free</h2>
+    <p class="sub">Every new account gets <b>3 free credits</b>: 3 hours of stream, every clip found included. No card needed.</p>
+    <div class="grid three">
+      <div class="card"><div class="n">FREE TRIAL</div><h3 style="font-size:28px;margin:6px 0">$0</h3><p>3 credits to try it on your own stream.</p>
+        <a class="btn" href="https://streamerclips.app/login#signup" style="margin-top:14px">Create account</a></div>
+      <div class="card"><div class="n">STARTER · OPENING SOON</div><h3 style="font-size:28px;margin:6px 0">$15<small style="font-size:14px;color:var(--muted)">/month</small></h3><p>20 credits every month. Cancel any time.</p></div>
+      <div class="card"><div class="n">PRO · OPENING SOON</div><h3 style="font-size:28px;margin:6px 0">$39<small style="font-size:14px;color:var(--muted)">/month</small></h3><p>80 credits every month. Cancel any time.</p></div>
+    </div>
+    <p class="note">Need more? One-off packs: 10 credits for $10, and they never expire. Paid plans open shortly; start free today.</p>
   </section>
 
   <section>
@@ -181,58 +154,18 @@
     <details><summary>Is clipping other streamers allowed?</summary>
       <p>Only with permission. StreamerClips is for streamers clipping their own streams, and for clippers working in a streamer's official clipping program. You're responsible for having the rights to the content you post.</p></details>
     <details><summary>Does it post publicly on its own?</summary>
-      <p>Clips go to your TikTok inbox as drafts. You add a sound and tap Post, so nothing goes out without you seeing it first.</p></details>
+      <p>No. You download your clips and post them yourself, so nothing goes out without you seeing it first. Sending clips to your TikTok as drafts is coming soon.</p></details>
     <details><summary>Which platforms and games?</summary>
       <p>Twitch VODs in, TikTok and YouTube Shorts formats out. It's tuned for GTA (including GTA 6), but works with any game.</p></details>
-    <details><summary>What will it cost?</summary>
-      <p>StreamerClips will run on credits: <b>1 credit = 1 hour of stream scanned</b>, and every clip found in that hour is included. So a 6-hour stream is 6 credits, whether it gives you one banger or five. You'll be able to get credits with a monthly plan or as one-off packs, and new accounts get a few free credits to try it. Exact prices are announced at launch. Tell us above what you'd pay and which way you'd rather buy.</p></details>
+    <details><summary>How do credits work?</summary>
+      <p><b>1 credit = 1 hour of stream scanned</b>, and every clip found in that hour is included. A 6-hour stream is 6 credits, whether it gives you one banger or five. If a run fails, its credits come back automatically. New accounts get 3 free credits.</p></details>
   </section>
 </div>
 
 <footer>
-  <div class="wrap">© 2026 StreamerClips · <a href="mailto:bjornderouville@proton.me">Contact</a> · Not affiliated with Twitch, TikTok or Rockstar Games.</div>
+  <div class="wrap">© 2026 StreamerClips · <a href="https://streamerclips.app/terms">Terms</a> · <a href="https://streamerclips.app/privacy">Privacy</a> · <a href="mailto:bjornderouville@proton.me">Contact</a> · Not affiliated with Twitch, TikTok or Rockstar Games.</div>
 </footer>
 
-<script>
-  // Waitlist -> Google Form. Fill these in from your form (see README in this folder).
-  // While FORM.action is empty, the button opens a prefilled email instead.
-  const FORM = {
-    action: "",           // https://docs.google.com/forms/d/e/<FORM_ID>/formResponse
-    email: "",            // entry.123456789
-    role: "",             // entry.987654321
-    price: "",            // entry.555555555
-    plan: "",             // entry.444444444
-  };
-  const CONTACT = "bjornderouville@proton.me";
 
-  const f = document.getElementById("waitForm");
-  f.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const email = f.email.value.trim();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { f.email.focus(); f.email.setCustomValidity("Enter a valid email"); f.email.reportValidity(); return; }
-    f.email.setCustomValidity("");
-    if (!FORM.action) {
-      const body = encodeURIComponent(`Please add me to the StreamerClips waitlist.\n\nRole: ${f.role.value}\nWould pay: ${f.price.value}\nPrefers: ${f.plan.value}`);
-      location.href = `mailto:${CONTACT}?subject=${encodeURIComponent("StreamerClips waitlist")}&body=${body}`;
-      return;
-    }
-    const data = new FormData();
-    data.append(FORM.email, email);
-    if (FORM.role) data.append(FORM.role, f.role.value);
-    if (FORM.price) data.append(FORM.price, f.price.value);
-    if (FORM.plan) data.append(FORM.plan, f.plan.value);
-    const btn = document.getElementById("joinBtn");
-    btn.disabled = true; btn.textContent = "Joining…";
-    try {
-      await fetch(FORM.action, { method: "POST", mode: "no-cors", body: data });  // Google Forms accepts this
-      document.getElementById("ok").style.display = "block";
-      f.reset(); btn.textContent = "You're on the list ✓";
-    } catch (err) {
-      btn.disabled = false; btn.textContent = "Join the waitlist";
-      alert("Couldn't reach the signup form. Try again in a moment.");
-    }
-  });
-  f.email.addEventListener("input", () => f.email.setCustomValidity(""));
-</script>
 </body>
 </html>
