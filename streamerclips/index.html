@@ -164,6 +164,12 @@
           </select>
         </div>
       </div>
+      <label for="plan">I'd rather</label>
+      <select id="plan" name="plan">
+        <option>Monthly plan with credits included</option>
+        <option>Pay as I go (buy credit packs)</option>
+        <option>Not sure yet</option>
+      </select>
       <button class="btn" type="submit" id="joinBtn">Join the waitlist</button>
       <div class="ok" id="ok" role="status">You're on the list. We'll email you when your spot opens.</div>
       <p class="fine">We only use your email to contact you about StreamerClips. Ask us any time to delete it.</p>
@@ -179,7 +185,7 @@
     <details><summary>Which platforms and games?</summary>
       <p>Twitch VODs in, TikTok and YouTube Shorts formats out. It's tuned for GTA (including GTA 6), but works with any game.</p></details>
     <details><summary>What will it cost?</summary>
-      <p>Pricing is announced at launch. Tell us what you'd pay in the form above. It helps us set it fairly.</p></details>
+      <p>StreamerClips will run on credits: <b>1 credit = 1 hour of stream scanned</b>, and every clip found in that hour is included. So a 6-hour stream is 6 credits, whether it gives you one banger or five. You'll be able to get credits with a monthly plan or as one-off packs, and new accounts get a few free credits to try it. Exact prices are announced at launch. Tell us above what you'd pay and which way you'd rather buy.</p></details>
   </section>
 </div>
 
@@ -195,6 +201,7 @@
     email: "",            // entry.123456789
     role: "",             // entry.987654321
     price: "",            // entry.555555555
+    plan: "",             // entry.444444444
   };
   const CONTACT = "bjornderouville@proton.me";
 
@@ -205,7 +212,7 @@
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { f.email.focus(); f.email.setCustomValidity("Enter a valid email"); f.email.reportValidity(); return; }
     f.email.setCustomValidity("");
     if (!FORM.action) {
-      const body = encodeURIComponent(`Please add me to the StreamerClips waitlist.\n\nRole: ${f.role.value}\nWould pay: ${f.price.value}`);
+      const body = encodeURIComponent(`Please add me to the StreamerClips waitlist.\n\nRole: ${f.role.value}\nWould pay: ${f.price.value}\nPrefers: ${f.plan.value}`);
       location.href = `mailto:${CONTACT}?subject=${encodeURIComponent("StreamerClips waitlist")}&body=${body}`;
       return;
     }
@@ -213,6 +220,7 @@
     data.append(FORM.email, email);
     if (FORM.role) data.append(FORM.role, f.role.value);
     if (FORM.price) data.append(FORM.price, f.price.value);
+    if (FORM.plan) data.append(FORM.plan, f.plan.value);
     const btn = document.getElementById("joinBtn");
     btn.disabled = true; btn.textContent = "Joining…";
     try {
