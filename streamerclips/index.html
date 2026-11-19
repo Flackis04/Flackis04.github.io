@@ -281,6 +281,19 @@
   </section>
 </div>
 
+<script>
+  // Came through a partner's link (?ref=name)? Pass it on to the sign-up page so they get credit.
+  (function () {
+    var ref = new URLSearchParams(location.search).get("ref") || "";
+    if (!/^[a-z0-9][a-z0-9-]{1,23}$/i.test(ref)) return;
+    document.querySelectorAll('a[href^="https://streamerclips.app/login"]').forEach(function (a) {
+      var u = new URL(a.href);
+      u.searchParams.set("ref", ref.toLowerCase());
+      a.href = u.toString();
+    });
+  })();
+</script>
+
 <footer>
   <div class="wrap">© 2026 StreamerClips · <a href="https://streamerclips.app/terms">Terms</a> · <a href="https://streamerclips.app/privacy">Privacy</a> · <a href="mailto:bjornderouville@proton.me">Contact</a> · Not affiliated with Twitch, TikTok, YouTube or Rockstar Games.</div>
 </footer>
