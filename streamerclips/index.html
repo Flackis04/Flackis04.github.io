@@ -3,171 +3,286 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>StreamerClips: stream VODs into posted TikToks, automatically</title>
-<meta name="description" content="StreamerClips finds the moments viewers actually clipped, edits them into vertical Shorts and TikToks with captions and hooks. Built for GTA streamers and clippers. Start free.">
-<meta property="og:title" content="StreamerClips">
-<meta property="og:description" content="Stream VODs in, ready-to-post Shorts and TikToks out. Start free with 3 hours of stream.">
+<title>StreamerClips: turn GTA 6 streams into viral clips</title>
+<meta name="description" content="StreamerClips watches whole streams, finds the moments worth posting and edits them into vertical TikToks and Shorts with search-ready captions. Built for GTA 6 clippers. Start free.">
+<meta property="og:title" content="StreamerClips: turn GTA 6 streams into viral clips">
+<meta property="og:description" content="Paste a stream. Get edited, captioned, ready-to-post clips back. Start free with 3 hours of stream.">
+<meta name="theme-color" content="#0b0614">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
+  /* Vice City night: neon sunset over a dark purple sky. Generic 80s Miami look, no Rockstar assets. */
   :root {
-    --bg: #0e0f13; --panel: #171920; --panel2: #1f222b; --line: #2a2e3a;
-    --text: #eceef3; --muted: #9aa1b2; --accent: #ffe600; --ink: #15130a; --good: #3ddc84;
+    --bg: #0b0614; --panel: rgba(28, 15, 48, .72); --panel2: #26163f;
+    --line: rgba(255, 120, 200, .16); --line2: rgba(255, 120, 200, .32);
+    --text: #f7f0ff; --muted: #b3a5cc; --dim: #8a7ca3;
+    --pink: #ff2e88; --orange: #ff8a3d; --sun: #ffd23f; --cyan: #2de2e6;
+    --grad: linear-gradient(100deg, #ff2e88 0%, #ff6a4d 50%, #ffb63f 100%);
+    --ink: #1d0716;
+    --head: "Anton", Impact, "Arial Narrow Bold", sans-serif;
   }
   * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 Inter, system-ui, sans-serif; }
-  a { color: var(--accent); }
-  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
-  nav { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; }
-  .logo { font-weight: 800; font-size: 20px; letter-spacing: -.3px; color: var(--text); text-decoration: none; }
-  .logo span { background: var(--accent); color: var(--ink); padding: 0 7px; border-radius: 6px; margin-right: 4px; }
-  .btn { display: inline-block; background: var(--accent); color: var(--ink); font-weight: 700; text-decoration: none;
-         padding: 12px 22px; border-radius: 10px; border: 0; font: inherit; font-weight: 700; cursor: pointer; }
-  .btn:hover { filter: brightness(1.06); }
-  .btn.ghost { background: transparent; color: var(--text); border: 1px solid var(--line); }
-  header.hero { padding: 64px 0 56px; display: grid; grid-template-columns: 1.2fr 1fr; gap: 48px; align-items: center; }
-  h1 { font-size: clamp(34px, 5vw, 56px); line-height: 1.08; letter-spacing: -1.5px; margin: 0 0 18px; font-weight: 800; }
-  h1 em { font-style: normal; color: var(--accent); }
-  .lead { font-size: 19px; color: var(--muted); margin: 0 0 28px; max-width: 560px; }
+  html { scroll-behavior: smooth; background: var(--bg); }
+  body { margin: 0; color: var(--text); font: 16px/1.6 Inter, "Segoe UI", system-ui, sans-serif;
+         background:
+           radial-gradient(1200px 600px at 50% -200px, rgba(255, 46, 136, .34), transparent 62%),
+           radial-gradient(800px 460px at 95% 0, rgba(255, 138, 61, .2), transparent 60%),
+           radial-gradient(900px 600px at 0% 100%, rgba(155, 92, 255, .14), transparent 60%),
+           linear-gradient(180deg, #140928 0%, var(--bg) 700px); }
+  a { color: var(--sun); }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 1; }
+  h1, h2, h3.disp { font-family: var(--head); font-weight: 400; letter-spacing: .01em; }
+  .grad { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--pink); }
+
+  /* nav */
+  nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; gap: 12px; }
+  .logo { display: inline-flex; align-items: center; gap: 10px; color: var(--text); text-decoration: none; }
+  .logo svg { width: 34px; height: 34px; }
+  .logo b { font-family: var(--head); font-weight: 400; font-size: 26px; letter-spacing: .03em; line-height: 1; }
+  .logo b span { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--grad); color: var(--ink);
+         font-weight: 800; text-decoration: none; padding: 13px 24px; border-radius: 14px; border: 0; font-size: 16px;
+         box-shadow: 0 8px 28px rgba(255, 46, 136, .35); transition: transform .1s, box-shadow .2s, filter .2s; }
+  .btn:hover { filter: brightness(1.06); box-shadow: 0 10px 34px rgba(255, 106, 77, .5); }
+  .btn:active { transform: translateY(1px); }
+  .btn.ghost { background: rgba(255, 255, 255, .04); color: var(--text); border: 1px solid var(--line2); box-shadow: none; font-weight: 600; }
+  .btn.ghost:hover { border-color: var(--pink); background: rgba(255, 46, 136, .08); }
+  .btn.sm { padding: 9px 16px; font-size: 14px; border-radius: 12px; }
+  .btn:focus-visible { outline: 2px solid var(--sun); outline-offset: 3px; }
+
+  /* hero */
+  header.hero { padding: 54px 0 70px; display: grid; grid-template-columns: 1.15fr 1fr; gap: 50px; align-items: center; }
+  h1 { font-size: clamp(46px, 7vw, 86px); line-height: .95; margin: 14px 0 20px; }
+  .lead { font-size: 19px; color: var(--muted); margin: 0 0 30px; max-width: 540px; }
   .cta-row { display: flex; gap: 12px; flex-wrap: wrap; }
-  .phone { justify-self: center; width: 260px; aspect-ratio: 9/16; border-radius: 28px; background: #000;
-           border: 8px solid #23262f; position: relative; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,.5); }
-  .phone .cam { height: 36%; background: linear-gradient(135deg, #2b2f3a, #1a1c22); display: grid; place-items: center; color: #555b6b; font-size: 12px; }
-  .phone .game { height: 64%; background: linear-gradient(160deg, #3a2a4a, #1f3b4d 60%, #253a2a); position: relative; }
-  .phone .hook { position: absolute; top: calc(36% + 14px); left: 50%; transform: translateX(-50%); background: #fff; color: #000;
-                 font-weight: 800; font-size: 12px; padding: 6px 10px; border-radius: 8px; white-space: nowrap; text-transform: uppercase; }
-  .phone .cap { position: absolute; bottom: 22%; left: 0; right: 0; text-align: center; font-weight: 800; font-size: 22px;
-                text-transform: uppercase; color: #fff; -webkit-text-stroke: 1.5px #000; paint-order: stroke fill; }
-  .phone .cap b { color: var(--accent); }
-  section { padding: 56px 0; border-top: 1px solid var(--line); }
-  h2 { font-size: clamp(26px, 3.4vw, 36px); letter-spacing: -.8px; margin: 0 0 10px; }
-  .sub { color: var(--muted); margin: 0 0 32px; max-width: 640px; }
+  .trust { margin-top: 18px; color: var(--dim); font-size: 14px; }
+
+  /* phone mockup: the clip format the app makes */
+  .phone { justify-self: center; width: 290px; aspect-ratio: 9/16; border-radius: 36px; background: #000; position: relative;
+           overflow: hidden; border: 9px solid #1d1230;
+           box-shadow: 0 0 0 1px var(--line2), 0 40px 90px rgba(0, 0, 0, .6), 0 0 80px rgba(255, 46, 136, .25); }
+  .phone .game { position: absolute; inset: 0 0 47% 0; overflow: hidden;
+                 background: linear-gradient(180deg, #2a0f4a 0%, #8a1f6e 42%, #ff5a5f 66%, #ffb347 82%, #1a0d2e 82.5%, #12091f 100%); }
+  .phone .game::before { content: ""; position: absolute; left: 50%; top: 40%; width: 46%; aspect-ratio: 1; transform: translate(-50%, 0);
+                         border-radius: 50%; background: linear-gradient(#ffe36e, #ff7a45 70%, #ff2e88);
+                         -webkit-mask: linear-gradient(#000 55%, transparent 55% 60%, #000 60% 68%, transparent 68% 73%, #000 73%);
+                         mask: linear-gradient(#000 55%, transparent 55% 60%, #000 60% 68%, transparent 68% 73%, #000 73%); }
+  .phone .palm { position: absolute; bottom: 17%; width: 40%; fill: #12091f; }
+  .phone .palm.l { left: -6%; } .phone .palm.r { right: -10%; width: 34%; transform: scaleX(-1); }
+  .phone .car { position: absolute; bottom: 9%; left: 30%; width: 40%; height: 9%; border-radius: 40% 50% 10% 10%;
+                background: linear-gradient(90deg, #ff2e88, #9b5cff); box-shadow: 0 0 18px #ff2e88; }
+  .phone .cam { position: absolute; inset: 53% 0 0 0; background: radial-gradient(120% 90% at 50% 20%, #3b2a5c, #160c26 70%); }
+  .phone .cam .head { position: absolute; left: 50%; top: 22%; width: 30%; aspect-ratio: .85; transform: translateX(-50%);
+                      background: #5a4378; border-radius: 48% 48% 44% 44%; }
+  .phone .cam .body { position: absolute; left: 50%; bottom: -8%; width: 70%; height: 42%; transform: translateX(-50%);
+                      background: linear-gradient(#ff2e88, #b21f62); border-radius: 50% 50% 0 0; }
+  .phone .cam .phones { position: absolute; left: 50%; top: 18%; width: 40%; aspect-ratio: 1.3; transform: translateX(-50%);
+                        border: 6px solid #120a20; border-bottom-color: transparent; border-radius: 50% 50% 0 0; }
+  .phone .box { position: absolute; left: 7%; right: 7%; top: 53%; transform: translateY(-50%); background: #fff; color: #000;
+                font: 700 13.5px/1.25 Arial, Inter, sans-serif; text-align: center; padding: 9px 10px; border-radius: 12px; z-index: 2; }
+  .phone .cap { position: absolute; left: 0; right: 0; top: 36%; text-align: center; font-family: var(--head); font-size: 25px;
+                color: #fff; -webkit-text-stroke: 1.5px #000; paint-order: stroke fill; letter-spacing: .02em; }
+  .phone .cap b { color: var(--sun); font-weight: 400; }
+  .phone .badge { position: absolute; top: 12px; left: 12px; z-index: 3; font-family: var(--head); font-size: 16px; padding: 5px 9px 4px;
+                  border-radius: 9px; background: var(--grad); color: var(--ink); }
+
+  /* sections */
+  section { padding: 70px 0; position: relative; }
+  section + section::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+                              background: linear-gradient(90deg, transparent, var(--line2), transparent); }
+  h2 { font-size: clamp(34px, 4.6vw, 54px); line-height: 1; margin: 10px 0 12px; }
+  .sub { color: var(--muted); margin: 0 0 36px; max-width: 640px; font-size: 17px; }
   .grid { display: grid; gap: 18px; grid-template-columns: repeat(4, 1fr); }
   .grid.three { grid-template-columns: repeat(3, 1fr); }
-  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 20px; }
-  .card .n { font-weight: 800; color: var(--accent); font-size: 14px; letter-spacing: .08em; }
-  .card h3 { margin: 6px 0 6px; font-size: 18px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 20px; padding: 22px;
+          backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: border-color .2s, transform .2s; }
+  .card:hover { border-color: var(--line2); transform: translateY(-2px); }
+  .card .n { display: inline-grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; background: var(--grad);
+             color: var(--ink); font-family: var(--head); font-size: 19px; margin-bottom: 10px; }
+  .card h3 { margin: 4px 0 6px; font-size: 18px; }
   .card p { margin: 0; color: var(--muted); font-size: 15px; }
-  .case { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
-  .case div { padding: 24px; border-right: 1px solid var(--line); }
+  .tag { display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: .1em; padding: 3px 8px; border-radius: 99px;
+         color: var(--cyan); border: 1px solid rgba(45, 226, 230, .4); vertical-align: middle; margin-left: 6px; }
+
+  .case { display: grid; grid-template-columns: repeat(3, 1fr); background: var(--panel); border: 1px solid var(--line);
+          border-radius: 20px; overflow: hidden; }
+  .case div { padding: 28px; border-right: 1px solid var(--line); }
   .case div:last-child { border-right: 0; }
-  .case .big { font-size: 34px; font-weight: 800; letter-spacing: -1px; }
-  .case .lbl { color: var(--muted); font-size: 14px; }
-  .note { color: var(--muted); font-size: 14px; margin-top: 12px; }
-  form.wait { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 26px; max-width: 560px; }
-  label { display: block; font-size: 14px; color: var(--muted); margin: 14px 0 6px; }
-  input, select { width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--line); background: var(--panel2);
-                  color: var(--text); font: inherit; }
-  input:focus, select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
-  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  form .btn { width: 100%; margin-top: 20px; padding: 14px; font-size: 17px; }
-  .fine { font-size: 13px; color: var(--muted); margin-top: 12px; }
-  .ok { display: none; background: #12261a; border: 1px solid var(--good); color: #b8f5cf; padding: 14px 16px; border-radius: 10px; margin-top: 16px; }
-  details { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; margin-bottom: 10px; }
-  summary { cursor: pointer; font-weight: 700; }
+  .case .big { font-family: var(--head); font-size: 56px; line-height: 1; }
+  .case .lbl { color: var(--muted); font-size: 15px; margin-top: 6px; }
+
+  /* pricing */
+  .plan { display: flex; flex-direction: column; }
+  .plan .price { font-family: var(--head); font-size: 54px; line-height: 1; margin: 10px 0 6px; }
+  .plan .price small { font-family: Inter, sans-serif; font-size: 15px; color: var(--muted); }
+  .plan p { flex: 1; }
+  .plan .btn { margin-top: 18px; width: 100%; }
+  .plan.best { border-color: var(--pink); box-shadow: 0 0 0 1px var(--pink), 0 20px 50px rgba(255, 46, 136, .2); }
+  .note { color: var(--muted); font-size: 15px; margin-top: 16px; }
+
+  details { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; margin-bottom: 10px; }
+  summary { cursor: pointer; font-weight: 700; list-style: none; }
+  summary::-webkit-details-marker { display: none; }
+  summary::before { content: "▸"; display: inline-block; width: 1.1em; color: var(--pink); transition: transform .15s; }
+  details[open] summary::before { transform: rotate(90deg); }
   details p { color: var(--muted); margin: 10px 0 0; }
-  footer { padding: 32px 0 48px; color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); }
-  @media (max-width: 860px) {
-    header.hero { grid-template-columns: 1fr; padding-top: 32px; }
-    .phone { width: 220px; }
+
+  .final { text-align: center; padding: 80px 0 90px; }
+  .final h2 { font-size: clamp(40px, 6vw, 70px); }
+  .final .sub { margin: 0 auto 30px; }
+
+  footer { padding: 30px 0 46px; color: var(--dim); font-size: 14px; border-top: 1px solid var(--line); position: relative; z-index: 1; }
+  footer a { color: var(--muted); }
+  .palms { position: fixed; bottom: -20px; width: 260px; height: 420px; pointer-events: none; opacity: .5; z-index: 0; fill: #521a66; }
+  .palms.l { left: -50px; } .palms.r { right: -60px; transform: scaleX(-1); height: 360px; }
+
+  @media (max-width: 900px) {
+    header.hero { grid-template-columns: 1fr; padding-top: 24px; gap: 40px; }
+    .phone { width: 250px; }
     .grid, .grid.three { grid-template-columns: 1fr 1fr; }
     .case { grid-template-columns: 1fr; }
     .case div { border-right: 0; border-bottom: 1px solid var(--line); }
+    .case div:last-child { border-bottom: 0; }
+    section { padding: 54px 0; }
   }
-  @media (max-width: 520px) { .grid, .grid.three, .row { grid-template-columns: 1fr; } }
+  @media (max-width: 560px) {
+    .grid, .grid.three { grid-template-columns: 1fr; }
+    nav .btn.ghost { display: none; }
+    .lead { font-size: 17px; }
+    .palms { width: 160px; height: 260px; opacity: .3; }
+    .palms.r { height: 220px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } html { scroll-behavior: auto; } }
 </style>
 </head>
 <body>
+<svg class="palms l" viewBox="0 0 200 320" aria-hidden="true"><use href="#palm"/></svg>
+<svg class="palms r" viewBox="0 0 200 320" aria-hidden="true"><use href="#palm"/></svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="palm">
+      <path d="M98 320c4-70 6-140 2-196l9-1c6 58 3 128-1 197z"/><path d="M104 126C80 92 42 84 6 98c30-6 60 2 84 30z"/>
+      <path d="M104 124C92 84 58 58 18 56c36 12 62 38 74 74z"/><path d="M106 124c4-40 26-74 62-88-28 20-44 52-50 92z"/>
+      <path d="M106 126c28-28 66-34 94-18-34-6-62 6-86 30z"/><path d="M106 128c30-6 62 8 78 40-22-22-48-30-76-26z"/>
+      <path d="M102 128c-28 0-54 18-64 50 16-26 40-38 66-38z"/>
+    </g>
+    <linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd23f"/><stop offset=".55" stop-color="#ff8a3d"/><stop offset="1" stop-color="#ff2e88"/></linearGradient>
+    <clipPath id="sc"><circle cx="20" cy="20" r="18"/></clipPath>
+  </defs>
+</svg>
+
 <div class="wrap">
   <nav>
-    <a class="logo" href="#"><span>Streamer</span>Clips</a>
-    <div style="display:flex;gap:8px"><a class="btn ghost" href="https://streamerclips.app/login">Log in</a><a class="btn" href="https://streamerclips.app/login#signup">Start free</a></div>
+    <a class="logo" href="#" aria-label="StreamerClips">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><g clip-path="url(#sc)"><rect width="40" height="40" fill="url(#sg)"/><rect y="24" width="40" height="2.2" fill="#0b0614"/><rect y="29" width="40" height="2.8" fill="#0b0614"/><rect y="34.4" width="40" height="3.4" fill="#0b0614"/></g></svg>
+      <b>STREAMER<span>CLIPS</span></b>
+    </a>
+    <div style="display:flex;gap:8px"><a class="btn ghost sm" href="https://streamerclips.app/login">Log in</a><a class="btn sm" href="https://streamerclips.app/login#signup">Start free</a></div>
   </nav>
 
   <header class="hero">
     <div>
-      <h1>8-hour streams in.<br><em>Posted TikToks</em> out.</h1>
-      <p class="lead">StreamerClips finds the moments viewers actually clipped, and edits them into vertical Shorts and TikToks with captions, a hook and a ready-to-paste caption. Built for GTA streamers and clippers.</p>
+      <div class="eyebrow">For GTA 6 clippers and streamers</div>
+      <h1>Turn GTA 6 streams into <span class="grad">viral clips</span></h1>
+      <p class="lead">Paste a stream. StreamerClips watches all of it, finds the moments worth posting and edits them for TikTok and Shorts: vertical, captioned, with a title people actually search for.</p>
       <div class="cta-row">
         <a class="btn" href="https://streamerclips.app/login#signup">Start free: 3 hours on us</a>
         <a class="btn ghost" href="#how">How it works</a>
       </div>
+      <div class="trust">No card needed · Twitch, Kick and YouTube · Failed runs refunded</div>
     </div>
-    <div class="phone" aria-hidden="true">
-      <div class="cam">facecam</div>
-      <div class="game"></div>
-      <div class="hook">Watch the railroad crossing</div>
-      <div class="cap">he got <b>launched</b></div>
+    <div class="phone" aria-label="Example of a finished clip: gameplay on top, facecam below, title box in the middle">
+      <div class="game">
+        <svg class="palm l" viewBox="0 0 200 320" aria-hidden="true"><use href="#palm"/></svg>
+        <svg class="palm r" viewBox="0 0 200 320" aria-hidden="true"><use href="#palm"/></svg>
+        <div class="car"></div>
+      </div>
+      <div class="cam"><div class="phones"></div><div class="head"></div><div class="body"></div></div>
+      <div class="badge">8/10</div>
+      <div class="cap">HE <b>FLOORED</b> IT</div>
+      <div class="box">He was SHOCKED when the getaway car flew off the pier in GTA 6 😳</div>
     </div>
   </header>
 
   <section id="how">
-    <h2>How it works</h2>
-    <p class="sub">Paste a VOD link, pick the part of the stream, and get clips back.</p>
+    <div class="eyebrow">How it works</div>
+    <h2>Stream in. <span class="grad">Bangers out.</span></h2>
+    <p class="sub">Paste a link to a past stream or a Twitch clip, pick the part you want, and get finished clips back.</p>
     <div class="grid">
-      <div class="card"><div class="n">01 · FIND</div><h3>Real moments, not guesses</h3><p>Reads which moments viewers clipped on Twitch and how chat reacted, so it starts where the audience already reacted.</p></div>
-      <div class="card"><div class="n">02 · PICK</div><h3>AI that watches the video</h3><p>Claude reads the transcript and looks at the frames, scores each moment honestly and drops anything that needs context.</p></div>
-      <div class="card"><div class="n">03 · EDIT</div><h3>Built for retention</h3><p>Facecam on top, gameplay below, word-by-word captions, a hook card, dead air cut out, and a punch-in on the peak.</p></div>
-      <div class="card"><div class="n">04 · POST</div><h3>Ready to post</h3><p>Download a 15–40 s Shorts cut and a 60 s+ TikTok cut of every moment, with title and hashtags to paste. Direct posting to TikTok is coming soon.</p></div>
+      <div class="card"><div class="n">1</div><h3>Finds the real moments</h3><p>Listens to the whole stream, reads chat, and checks which moments viewers clipped themselves.</p></div>
+      <div class="card"><div class="n">2</div><h3>AI that watches the video</h3><p>Claude reads the transcript, looks at the frames and scores every moment honestly. Weak ones are dropped.</p></div>
+      <div class="card"><div class="n">3</div><h3>Edited for retention</h3><p>Gameplay on top, facecam below, a title box, word-by-word captions, dead air cut and the peak shown first.</p></div>
+      <div class="card"><div class="n">4</div><h3>Ready to post</h3><p>A 10–20 s short cut and a 60 s+ full clip of every moment, with title, description and tags to paste.</p></div>
     </div>
   </section>
 
   <section>
+    <div class="eyebrow">Real result</div>
     <h2>From one real stream</h2>
     <p class="sub">A single 7-hour GTA RP stream, run through StreamerClips:</p>
     <div class="case">
-      <div><div class="big">218</div><div class="lbl">viewer-made clips read to find the hot moments</div></div>
-      <div><div class="big">10,910</div><div class="lbl">views on the moment it chose: a cop launched into a railroad crossing</div></div>
-      <div><div class="big">11 s</div><div class="lbl">final clip, scored 8/10, hook: "Watch the railroad crossing"</div></div>
+      <div><div class="big grad">218</div><div class="lbl">viewer-made clips read to find the hot moments</div></div>
+      <div><div class="big grad">10,910</div><div class="lbl">views on the moment it chose: a cop launched into a railroad crossing</div></div>
+      <div><div class="big grad">8/10</div><div class="lbl">score for the final 11-second clip</div></div>
     </div>
   </section>
 
   <section>
+    <div class="eyebrow">What you get</div>
     <h2>Everything a clipper does by hand</h2>
-    <p class="sub">Done for you, consistently, while you sleep.</p>
+    <p class="sub">Done for you, the same way every time.</p>
     <div class="grid three">
-      <div class="card"><h3>Autopilot <small style="color:var(--accent);font-size:12px">COMING SOON</small></h3><p>Will check your streamers' newest VODs daily, keep only the game you care about, and make the best clips.</p></div>
-      <div class="card"><h3>Hooks that stop the scroll</h3><p>On-screen hooks written from proven formulas, plus two alternatives to A/B test.</p></div>
-      <div class="card"><h3>Cold opens</h3><p>When the payoff comes late, the clip opens on the peak first, then rewinds.</p></div>
-      <div class="card"><h3>Facecam detection</h3><p>Finds the streamer's cam automatically and stacks it above the gameplay.</p></div>
-      <div class="card"><h3>Titles and hashtags</h3><p>Every clip comes with a title, description and hashtags ready to paste.</p></div>
-      <div class="card"><h3>Quality bar</h3><p>Only clips that score high get made. No filler that drags your account down.</p></div>
+      <div class="card"><h3>Search-ready titles</h3><p>Name + keywords + emotion, the caption style the big clip pages use, so TikTok search can find your clip.</p></div>
+      <div class="card"><h3>Two versions of every clip</h3><p>A tight short cut for reach, and a "Full clip" over a minute for TikTok Creator Rewards.</p></div>
+      <div class="card"><h3>Peak shown first</h3><p>When the payoff comes late, the clip opens on it, then plays the build-up.</p></div>
+      <div class="card"><h3>Safe captions</h3><p>Avoids the words TikTok quietly holds back, so a good clip isn't buried for its caption.</p></div>
+      <div class="card"><h3>Facecam found for you</h3><p>Finds the streamer's cam automatically and fills the screen. No black bars, no blurred borders.</p></div>
+      <div class="card"><h3>Autopilot <span class="tag">SOON</span></h3><p>Checks your streamers' newest streams every day and makes the best clips while you sleep.</p></div>
     </div>
   </section>
 
   <section id="start">
-    <h2>Start free</h2>
-    <p class="sub">Every new account gets <b>3 free credits</b>: 3 hours of stream, every clip found included. No card needed.</p>
+    <div class="eyebrow">Pricing</div>
+    <h2>Pay per hour of stream</h2>
+    <p class="sub"><b>1 credit = 1 hour of stream scanned</b>, and every clip found in that hour is included. New accounts get 3 free credits.</p>
     <div class="grid three">
-      <div class="card"><div class="n">FREE TRIAL</div><h3 style="font-size:28px;margin:6px 0">$0</h3><p>3 credits to try it on your own stream.</p>
-        <a class="btn" href="https://streamerclips.app/login#signup" style="margin-top:14px">Create account</a></div>
-      <div class="card"><div class="n">STARTER</div><h3 style="font-size:28px;margin:6px 0">$15<small style="font-size:14px;color:var(--muted)">/month</small></h3><p>20 credits every month. Cancel any time.</p>
-        <a class="btn ghost" href="https://streamerclips.app/login#signup" style="margin-top:14px">Get Starter</a></div>
-      <div class="card"><div class="n">PRO</div><h3 style="font-size:28px;margin:6px 0">$39<small style="font-size:14px;color:var(--muted)">/month</small></h3><p>80 credits every month. Cancel any time.</p>
-        <a class="btn ghost" href="https://streamerclips.app/login#signup" style="margin-top:14px">Get Pro</a></div>
+      <div class="card plan"><div class="eyebrow" style="color:var(--muted)">Monthly</div><h3>Starter</h3>
+        <div class="price">$15<small>/month</small></div><p>20 credits every month. Cancel any time.</p>
+        <a class="btn ghost" href="https://streamerclips.app/login#signup">Start free, then upgrade</a></div>
+      <div class="card plan best"><div class="eyebrow">Best value</div><h3>Pro</h3>
+        <div class="price">$39<small>/month</small></div><p>80 credits every month, under $0.50 per stream-hour. Cancel any time.</p>
+        <a class="btn" href="https://streamerclips.app/login#signup">Start free, then upgrade</a></div>
+      <div class="card plan"><div class="eyebrow" style="color:var(--muted)">One-off</div><h3>10 credits</h3>
+        <div class="price">$10</div><p>A pack that never expires. No subscription.</p>
+        <a class="btn ghost" href="https://streamerclips.app/login#signup">Start free, then buy</a></div>
     </div>
-    <p class="note">Need more? One-off packs: 10 credits for $10, and they never expire. Start free, then upgrade inside the app whenever you like.</p>
+    <p class="note">Every account starts with 3 free credits, no card needed. If a run fails, its credits come back automatically.</p>
   </section>
 
   <section>
-    <h2>Questions</h2>
+    <div class="eyebrow">Questions</div>
+    <h2>Good to know</h2>
     <details><summary>Is clipping other streamers allowed?</summary>
-      <p>Only with permission. StreamerClips is for streamers clipping their own streams, and for clippers working in a streamer's official clipping program. You're responsible for having the rights to the content you post.</p></details>
+      <p>Only with permission. StreamerClips is for streamers clipping their own streams, and for clippers in a streamer's official clipping program. You're responsible for having the rights to what you post.</p></details>
     <details><summary>Does it post publicly on its own?</summary>
-      <p>No. You download your clips and post them yourself, so nothing goes out without you seeing it first. Sending clips to your TikTok as drafts is coming soon.</p></details>
+      <p>No. You download your clips and post them yourself, so nothing goes out without you seeing it first.</p></details>
     <details><summary>Which platforms and games?</summary>
-      <p>Twitch VODs in, TikTok and YouTube Shorts formats out. It's tuned for GTA (including GTA 6), but works with any game.</p></details>
+      <p>Twitch, Kick and YouTube recordings in (and Twitch clip links), TikTok and YouTube Shorts formats out. It's tuned for GTA 6, but works with any game.</p></details>
     <details><summary>How do credits work?</summary>
-      <p><b>1 credit = 1 hour of stream scanned</b>, and every clip found in that hour is included. A 6-hour stream is 6 credits, whether it gives you one banger or five. If a run fails, its credits come back automatically. New accounts get 3 free credits.</p></details>
+      <p>A 6-hour stream is 6 credits, whether it gives you one banger or five. Scan just part of a stream to spend less. Failed runs are refunded automatically.</p></details>
+  </section>
+
+  <section class="final">
+    <h2>Your next viral clip is <span class="grad">already streamed</span></h2>
+    <p class="sub">Paste it in and see what StreamerClips finds. 3 hours free.</p>
+    <a class="btn" href="https://streamerclips.app/login#signup" style="padding:16px 34px;font-size:18px">Start free</a>
   </section>
 </div>
 
 <footer>
-  <div class="wrap">© 2026 StreamerClips · <a href="https://streamerclips.app/terms">Terms</a> · <a href="https://streamerclips.app/privacy">Privacy</a> · <a href="mailto:bjornderouville@proton.me">Contact</a> · Not affiliated with Twitch, TikTok or Rockstar Games.</div>
+  <div class="wrap">© 2026 StreamerClips · <a href="https://streamerclips.app/terms">Terms</a> · <a href="https://streamerclips.app/privacy">Privacy</a> · <a href="mailto:bjornderouville@proton.me">Contact</a> · Not affiliated with Twitch, TikTok, YouTube or Rockstar Games.</div>
 </footer>
-
-
 </body>
 </html>
